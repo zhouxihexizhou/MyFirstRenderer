@@ -1,0 +1,79 @@
+#pragma once
+
+#include"primitives.h"
+#include"window.h"
+#include"camera.h"
+
+class Drawer {
+public:
+	Drawer() {
+	}
+	void drawVertex(Vertex vertex, Window window, Camera camera);
+	void drawLine(Vertex v1, Vertex v2, Window window, Camera camera);
+	void drawTriangle(Triangle triangle, Window window, Camera camera);
+};
+
+
+
+#include"drawer.h"
+#include"transform.h"
+#include<iostream>
+
+
+//画点
+void Drawer::drawVertex(Vertex vertex, Window window, Camera camera)
+{
+    /*
+    red = vertex.R;
+    green = vertex.G;
+    blue = vertex.B;
+    screen_x = sTrans(vertex.vector, window).x;
+    screen_y = sTrans(vertex.vector, window).y;
+    //startDraw = true;
+    */
+}
+
+
+//画线
+void Drawer::drawLine(Vertex v1, Vertex v2, Window window, Camera camera)
+{
+    /*
+    red = v1.R;
+    green = v1.G;
+    blue = v1.B;
+    int i, j;
+    float k;
+    v1.vector = transformAll(v1.vector, camera, window);
+    v2.vector = transformAll(v2.vector, camera, window);
+    cout << v1.vector.x << endl;
+    cout << v1.vector.y << endl;
+    if (v1.vector.x < v2.vector.x) {
+        k = (v2.vector.y - v1.vector.y) / (v2.vector.x - v1.vector.x);
+        for (i = (int)v1.vector.x; i <= (int)v2.vector.x; ++i) {
+            screen_x = i;
+            screen_y = (int)((k * ((float)i - v1.vector.x)) + v1.vector.y);
+            startDraw = true;
+        }
+    }
+    else {
+        k = (v1.vector.y - v2.vector.y) / (v1.vector.x - v2.vector.x);
+        for (i = (int)v2.vector.x; i <= (int)v1.vector.x; ++i) {
+            screen_x = i;
+            screen_y = (int)((k * ((float)i - v2.vector.x)) + v2.vector.y);
+            startDraw = true;
+        }
+    }
+    startDraw = false;
+    */
+}
+
+
+//画三角形
+void Drawer::drawTriangle(Triangle triangle, Window window, Camera camera)
+{
+
+    //this->drawLine(triangle.point1, triangle.point2, window, camera);
+    //this->drawLine(triangle.point2, triangle.point3, window, camera);
+    //this->drawLine(triangle.point3, triangle.point1, window, camera);
+}
+
