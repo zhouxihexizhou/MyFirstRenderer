@@ -62,3 +62,38 @@ Vector3 operator%(const Vector3& a, const Vector3& b)
     c.z = a.x * b.y - a.y * b.x;
     return c;
 }
+
+
+//更新三角形顶点信息：法向量
+void Triangle::updateTriangle()
+{
+    Vector3 v1 = (this->point2).vector - (this->point1).vector;
+    Vector3 v2 = (this->point3).vector - (this->point1).vector;
+    Vector3 n = v1 % v2;
+    (this->point1).normal = n;
+    (this->point2).normal = n;
+    (this->point3).normal = n;
+}
+
+
+//数乘向量，float * Vector3
+Vector3 numMulVec(const float& a, const Vector3& b)
+{
+    Vector3 c;
+    c.x = a * b.x;
+    c.y = a * b.y;
+    c.z = a * b.z;
+    return c;
+}
+
+
+//三维向量各坐标相乘，Vector3 * Vector3
+Vector3 vecMulVec(const Vector3& a, const Vector3& b)
+{
+    Vector3 c;
+    c.x = a.x * b.x;
+    c.y = a.y * b.y;
+    c.z = a.z * b.z;
+    return c;
+}
+

@@ -3,6 +3,8 @@
 #include"window.h"
 #include"primitives.h"
 #include"engine.h"
+#include"effect.h"
+#include"transform.h"
 
 using namespace std; 
 
@@ -10,12 +12,18 @@ using namespace std;
 //全局变量
 Window* window = NULL;
 Camera* camera = NULL;
+Light* light = NULL;
 
 Device* device = NULL;
 Context* context = NULL;
 SwapChain* swapChain = NULL;
 
 unsigned int bgColor = ((65 << 16) | (105 << 8) | 225);    //背景颜色
+
+Vector3 vertexBuff[4]{ { -0.3f, -0.3f, 0.0f },
+                       { -0.3f, -0.2f, 0.0f }, 
+                       { 0.0f, -0.2f, 0.0f }, 
+                       { -0.3f, -0.2f, 0.2f }};
 
 
 //方法声明
@@ -55,6 +63,8 @@ void initWindow()
 {
 	window = new Window(800, 800);
 	camera = new Camera();
+
+	light = new Light();
 	window->startWindow();
 	return;
 }
@@ -76,7 +86,7 @@ void initDevice()
 void render() 
 {
 	context->clearTargetView(bgColor, swapChain->backBuffer);
-	context->draw(swapChain->backBuffer);
+	context->draw(swapChain->backBuffer, vertexBuff, 4);
 
 	swapChain->present(window);
 }
@@ -88,5 +98,3 @@ void cleanupDevice()
 	
 }
 
-
-//

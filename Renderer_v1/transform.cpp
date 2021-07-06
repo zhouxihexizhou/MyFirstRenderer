@@ -13,7 +13,7 @@ Vector3 WorldTrans::wTrans(const Vector3& a)
 //视图转换：世界坐标->视图坐标
 Vector3 ViewTrans::vTrans(const Vector3& a, const Camera& camera)
 {
-    Vector3 y = camera.target % camera.xDirect;
+    Vector3 y = camera.target % camera.xDirect; 
     (this->matrix).mat[0][0] = camera.xDirect.x;    (this->matrix).mat[0][1] = camera.xDirect.y;   (this->matrix).mat[0][2] = camera.xDirect.z;
     (this->matrix).mat[1][0] = y.x;                 (this->matrix).mat[1][1] = y.y;                (this->matrix).mat[1][2] = y.z;
     (this->matrix).mat[2][0] = camera.target.x;     (this->matrix).mat[2][1] = camera.target.y;    (this->matrix).mat[2][2] = camera.target.z;
@@ -57,3 +57,26 @@ Vector3 transformAll(const Vector3& a, const Camera& camera, const Window& win)
     Vector3 f = sTrans(e, win);
     return f;
 }
+
+
+//类型转换：Vector3 -> unsigned int 
+unsigned int vecToInt(Vector3 v)
+{
+    unsigned int colorR = (unsigned int)(v.x * 255);
+    unsigned int colorG = (unsigned int)(v.y * 255);
+    unsigned int colorB = (unsigned int)(v.z * 255);
+    unsigned int result = ((colorR << 16) | (colorG << 8) | colorB);
+    return result;
+}
+
+
+//三维向量单位化
+Vector3 vecNormalize(Vector3 vector)
+{
+    float m = sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
+    vector.x = vector.x / m;
+    vector.y = vector.y / m;
+    vector.z = vector.z / m;
+    return vector;
+}
+

@@ -28,12 +28,16 @@ public:
 //¶¥µã
 class Vertex {
 public:
-    Vector3 vector;
+    Vector3 vector;    //·½ÏòÏòÁ¿
+    Vector3 normal;    //·¨ÏòÁ¿
+
     unsigned int color;
+    Vector3 vColor;
 
     Vertex() {
         this->vector = { 0.0f, 0.0f, 0.0f };
         this->color = ((255 << 16) | (255 << 8) | 255);
+        this->vColor = { 1.0f, 1.0f, 1.0f };
     }
 };
 
@@ -47,9 +51,10 @@ public:
 
     Triangle() {
         (this->point1).vector = { -0.3f, -0.3f, 0.0f };
-        (this->point2).vector = { 0.3f, -0.3f, 0.0f };
-        (this->point3).vector = { 0.0f, 0.3f, 0.0f };
+        (this->point2).vector = { 0.0f, 0.3f, 0.0f };
+        (this->point3).vector = { 0.3f, -0.3f, 0.0f };
     }
+    void updateTriangle();       //¸üĞÂ¶¥µãĞÅÏ¢£º·¨ÏòÁ¿
 };
 
 
@@ -62,4 +67,8 @@ Vector3 operator+(const Vector3& a, const Vector3& b);           //ÈıÎ¬×ø±êÏà¼Ó£
 Vector3 operator-(const Vector3& a, const Vector3& b);           //ÈıÎ¬×ø±êÏà¼õ£¬µãÏà¼õ£¬c=a-b
 float operator*(const Vector3& a, const Vector3& b);             //ÈıÎ¬×ø±êµã»ı
 Vector3 operator%(const Vector3& a, const Vector3& b);           //ÈıÎ¬×ø±ê²æ»ı
+
+
+Vector3 numMulVec(const float& a, const Vector3& b);           //Êı³ËÏòÁ¿£¬float * Vector3
+Vector3 vecMulVec(const Vector3& a, const Vector3& b);           //ÈıÎ¬ÏòÁ¿¸÷×ø±êÏà³Ë£¬Vector3 * Vector3
 

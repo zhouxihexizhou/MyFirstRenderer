@@ -21,15 +21,10 @@ public:
 };
 
 
-void fillTexture(unsigned int color, Texture* texture);
+void fillTexture(unsigned int color, Texture* texture);                 //填充贴图
 
+Vertex drawVertex(Texture* texture, Vertex vertex);                     //画点
+void drawLine(Texture* texture, Vertex v1, Vertex v2);                  //画线  DDA算法
+void fillTriangle(Texture* texture, Vertex v1, Vertex v2, Vertex v3);   //填充三角形
+void drawTriangle(Texture* texture, Triangle triangle);                 //画三角形
 
-void drawTriangle(unsigned int color, Texture* texture, Triangle triangle);
-
-/*
-
-Vertex drawVertex(unsigned int color, Texture* texture, Vertex vertex);
-void drawLine(unsigned int color, Texture* texture, Vertex v1, Vertex v2);
-void drawTriangle(unsigned int color, Texture* texture, Triangle triangle);
-
-*/

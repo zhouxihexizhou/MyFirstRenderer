@@ -13,7 +13,7 @@ public:
     bool is_open;           //是否开启
     Vector3 position;       //位置-----------基于世界坐标系
     Vector3 target;         //方向-----------基于世界坐标系
-    Vector3 xDirect;        //x方向----------基于世界坐标系
+    Vector3 xDirect;        //右方向----------基于世界坐标系
     float fov;              //视野
     float aspect;           //宽高比
     float near_range;       //近范围
@@ -23,7 +23,7 @@ public:
         this->name = "camera";
         this->is_open = true;
         this->position = { 0.0f,0.0f,-1.0f };
-        this->target = { 0.0f,0.0f,1.0f };
+        this->target = { 0.0f,0.0f,1.0f }; 
         this->xDirect = { 1.0f,0.0f,0.0f };
         this->fov = 45.0f;
         this->aspect = 1.0f;

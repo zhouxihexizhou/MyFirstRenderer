@@ -1,7 +1,8 @@
 #include"drawer.h"
 #include"primitives.h"
 #include"shader.h"
-#include<iostream>
+
+
 
 //填充贴图
 void fillTexture(unsigned int color, Texture* texture) 
@@ -19,17 +20,17 @@ void fillTexture(unsigned int color, Texture* texture)
 
 
 //画点
-Vertex drawVertex(unsigned int color, Texture* texture, Vertex vertex)
+Vertex drawVertex(Texture* texture, Vertex vertex)
 {
-	Vertex v = vertexShader(color, vertex);
+	Vertex v = vertexShader(vertex);
 	int i = (int)v.vector.y * texture->width + (int)v.vector.x;
-	(texture->colorBuff)[i] = color;
+	(texture->colorBuff)[i] = v.color;
 	return v;
 }
 
 
 //画线  DDA算法
-void drawLine(unsigned int color, Texture* texture, Vertex v1, Vertex v2)
+void drawLine(Texture* texture, Vertex v1, Vertex v2)
 {
 
 	int i, j, screen_x, screen_y, s;
@@ -40,11 +41,11 @@ void drawLine(unsigned int color, Texture* texture, Vertex v1, Vertex v2)
 			screen_x = i;
 			screen_y = (int)((k * ((float)i - v1.vector.x)) + v1.vector.y);
 			s = screen_y * texture->width + screen_x;
-			(texture->colorBuff)[s] = color;
+			(texture->colorBuff)[s] = v1.color;
 			if ((k > 1 || k < -1) && (screen_y < texture->height - 1)) {
 				screen_y += 1;
 				s = screen_y * texture->width + screen_x;
-				(texture->colorBuff)[s] = color;
+				(texture->colorBuff)[s] = v1.color;
 			}
 		}
 	}
@@ -54,11 +55,11 @@ void drawLine(unsigned int color, Texture* texture, Vertex v1, Vertex v2)
 			screen_x = i;
 			screen_y = (int)((k * ((float)i - v2.vector.x)) + v2.vector.y);
 			s = screen_y * texture->width + screen_x;
-			(texture->colorBuff)[s] = color;
+			(texture->colorBuff)[s] = v1.color;
 			if ((k > 1 || k < -1) && (screen_y < texture->height - 1)) {
 				screen_y += 1;
 				s = screen_y * texture->width + screen_x;
-				(texture->colorBuff)[s] = color;
+				(texture->colorBuff)[s] = v1.color;
 			}
 		}
 	}
@@ -66,13 +67,50 @@ void drawLine(unsigned int color, Texture* texture, Vertex v1, Vertex v2)
 }
 
 
-//画三角形
-void drawTriangle(unsigned int color, Texture* texture, Triangle triangle)
+//填充三角形  scanline
+void fillTriangle(Texture* texture, Vertex v1, Vertex v2, Vertex v3)
 {
-	Vertex v1 = drawVertex(color, texture, triangle.point1);
-	Vertex v2 = drawVertex(color, texture, triangle.point2);
-	Vertex v3 = drawVertex(color, texture, triangle.point3);
-	drawLine(color, texture, v1, v2);
-	drawLine(color, texture, v2, v3);
-	drawLine(color, texture, v3, v1);
+	float xMin = v1.vector.x; if (v2.vector.x < xMin) xMin = v2.vector.x; if (v3.vector.x < xMin) xMin = v3.vector.x;
+	float xMax = v1.vector.x; if (v2.vector.x > xMax) xMax = v2.vector.x; if (v3.vector.x > xMax) xMax = v3.vector.x;
+	float yMin = v1.vector.y; if (v2.vector.y < yMin) yMin = v2.vector.y; if (v3.vector.y < yMin) yMin = v3.vector.y;
+	float yMax = v1.vector.y; if (v2.vector.y > yMax) yMax = v2.vector.y; if (v3.vector.y > yMax) yMax = v3.vector.y;
+
+	Vector3 a1 = (v2.vector - v1.vector) % (v3.vector - v1.vector);
+	Vector3 a2 = (v3.vector - v2.vector) % (v1.vector - v2.vector);
+	Vector3 a3 = (v1.vector - v3.vector) % (v2.vector - v3.vector);
+	Vector3 p = v1.vector;
+	Vector3 b1, b2, b3;
+	int s;
+	
+	for (int i = xMin; i <= xMax; ++i)
+	{
+		for (int j = yMin; j <= yMax; ++j)
+		{
+			// 计算是否在三角形内部
+			p.x = i;
+			p.y = j;
+			b1 = (v2.vector - v1.vector) % (p - v1.vector);
+			b2 = (v3.vector - v2.vector) % (p - v2.vector);
+			b3 = (v1.vector - v3.vector) % (p - v3.vector);
+
+			if ((a1 * b1 >= 0) && (a2 * b2 >= 0) && (a3 * b3 >= 0)) {
+				s = j * texture->width + i;
+				(texture->colorBuff)[s] = v1.color;
+			}
+		}
+	}
 }
+
+
+//画三角形
+void drawTriangle(Texture* texture, Triangle triangle)
+{
+	Vertex v1 = drawVertex(texture, triangle.point1);
+	Vertex v2 = drawVertex(texture, triangle.point2);
+	Vertex v3 = drawVertex(texture, triangle.point3);
+	//drawLine(texture, v1, v2);
+	//drawLine(texture, v2, v3);
+	//drawLine(texture, v3, v1);
+	fillTriangle(texture, v1, v2, v3);
+}
+

@@ -31,7 +31,7 @@ public:
 	Context() {
 	}
 	void clearTargetView(unsigned int color, Texture* texture);       //ÃÓ≥‰÷∏∂®“≥√Ê
-	void draw(Texture* texture);
+	void draw(Texture* texture, Vector3* vec, int num);
 };
 
 

@@ -57,9 +57,21 @@ void Context::clearTargetView(unsigned int color, Texture* texture)
 
 
 //»­
-void Context::draw(Texture* texture)
+void Context::draw(Texture* texture, Vector3* vec, int num)
 {
-	unsigned int yellow = ((255 << 16) | (255 << 8) | 0);
 	Triangle triangle;
-    drawTriangle(yellow, texture, triangle);
+	for (int i = 0; i <= num - 3; ++i) {
+		if (i % 2 == 0) {    //ÆæÊý
+			triangle.point1.vector = vec[i];
+			triangle.point2.vector = vec[i+1];
+			triangle.point3.vector = vec[i+2];
+		}
+		else {    //Å¼Êý
+			triangle.point1.vector = vec[i+1];
+			triangle.point2.vector = vec[i];
+			triangle.point3.vector = vec[i+2];
+		}
+		triangle.updateTriangle();
+		drawTriangle(texture, triangle);
+	}
 }

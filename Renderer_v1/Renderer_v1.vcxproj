@@ -141,6 +141,7 @@
   <ItemGroup>
     <ClInclude Include="camera.h" />
     <ClInclude Include="drawer.h" />
+    <ClInclude Include="effect.h" />
     <ClInclude Include="engine.h" />
     <ClInclude Include="primitives.h" />
     <ClInclude Include="shader.h" />
@@ -150,6 +151,7 @@
   <ItemGroup>
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="drawer.cpp" />
+    <ClCompile Include="effect.cpp" />
     <ClCompile Include="engine.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="shader.cpp" />

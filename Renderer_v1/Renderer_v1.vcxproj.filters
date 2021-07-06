@@ -48,6 +48,9 @@
     <ClInclude Include="shader.h">
       <Filter>头文件\achieve</Filter>
     </ClInclude>
+    <ClInclude Include="effect.h">
+      <Filter>头文件\elements</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -73,6 +76,9 @@
     </ClCompile>
     <ClCompile Include="shader.cpp">
       <Filter>源文件\achieve</Filter>
+    </ClCompile>
+    <ClCompile Include="effect.cpp">
+      <Filter>源文件\elements</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
