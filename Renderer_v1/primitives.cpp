@@ -17,9 +17,10 @@ Vector3 vector3_transform(const Vector3& a, const Matrix& m)
 {
     //默认齐次坐标为1
     Vector3 b;
-    b.x = m.mat[0][0] * a.x + m.mat[1][0] * a.y + m.mat[2][0] * a.z + m.mat[3][0];
-    b.y = m.mat[0][1] * a.x + m.mat[1][1] * a.y + m.mat[2][1] * a.z + m.mat[3][1];
-    b.z = m.mat[0][2] * a.x + m.mat[1][2] * a.y + m.mat[2][2] * a.z + m.mat[3][2];
+    b.x = m.mat[0][0] * a.x + m.mat[1][0] * a.y + m.mat[2][0] * a.z + m.mat[3][0] * a.w;
+    b.y = m.mat[0][1] * a.x + m.mat[1][1] * a.y + m.mat[2][1] * a.z + m.mat[3][1] * a.w;
+    b.z = m.mat[0][2] * a.x + m.mat[1][2] * a.y + m.mat[2][2] * a.z + m.mat[3][2] * a.w;
+    b.w = m.mat[0][3] * a.x + m.mat[1][3] * a.y + m.mat[2][3] * a.z + m.mat[3][3] * a.w;
     return b;
 }
 

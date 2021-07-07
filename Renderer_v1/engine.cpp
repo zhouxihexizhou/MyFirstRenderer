@@ -1,5 +1,13 @@
 #include"engine.h"
 #include"primitives.h"
+#include<iostream>
+
+
+//创建深度缓冲
+void Device::createDepthBuff(Window* window)
+{
+	this->depthBuffer = new float[window->windowWidth * window->windowHeight];
+}
 
 
 //创建 设备、交换链、上下文

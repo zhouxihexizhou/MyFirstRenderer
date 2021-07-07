@@ -30,8 +30,12 @@ Vector3 ProjectTrans::pTrans(const Vector3& a, const Camera& camera)
     (this->matrix).mat[1][1] = 1 / tan(camera.fov / 2);
     (this->matrix).mat[2][2] = camera.far_range / (camera.far_range - camera.near_range);
     (this->matrix).mat[3][2] = (camera.far_range * camera.near_range) / (camera.near_range - camera.far_range);
-    Vector3 b;
+    Vector3 b; 
     b = vector3_transform(a, this->matrix);
+    b.x /= b.w;
+    b.y /= b.w;
+    b.z /= b.w;
+    b.w /= b.w;
     return b;
 }
 
@@ -42,6 +46,7 @@ Vector3 sTrans(const Vector3& a, const Window& win)
     Vector3 b;
     b.x = (win.windowWidth / 2) + (a.x * win.windowWidth / 2);
     b.y = (win.windowHeight / 2) - (a.y * win.windowHeight / 2);
+    b.z = a.z;
     return b;
 }
 

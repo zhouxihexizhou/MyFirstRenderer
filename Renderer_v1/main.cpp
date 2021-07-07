@@ -20,10 +20,23 @@ SwapChain* swapChain = NULL;
 
 unsigned int bgColor = ((65 << 16) | (105 << 8) | 225);    //背景颜色
 
-Vector3 vertexBuff[4]{ { -0.3f, -0.3f, 0.0f },
-                       { -0.3f, -0.2f, 0.0f }, 
-                       { 0.0f, -0.2f, 0.0f }, 
-                       { -0.3f, -0.2f, 0.2f }};
+#define bufferNums 14
+
+Vector3 vertexBuff[14]={ 
+{ -0.1f, -0.3f, 0.0f },
+{ -0.3f, -0.3f, 0.0f },
+{ -0.1f, -0.1f, 0.0f },
+{ -0.3f, -0.1f, 0.0f },
+{ -0.3f, -0.1f, 0.3f },
+{ -0.3f, -0.3f, 0.0f },
+{ -0.3f, -0.3f, 0.3f },
+{ -0.1f, -0.3f, 0.0f },
+{ -0.1f, -0.3f, 0.3f },
+{ -0.1f, -0.1f, 0.0f },
+{ -0.1f, -0.1f, 0.3f },
+{ -0.3f, -0.1f, 0.3f },
+{ -0.1f, -0.3f, 0.3f },
+{ -0.3f, -0.3f, 0.3f }, };
 
 
 //方法声明
@@ -77,6 +90,7 @@ void initDevice()
 	createEngine(&device, &swapChain, &context);
 
 	swapChain->getBuffer(window);
+	device->createDepthBuff(window);
 	 
 	return;
 }
@@ -86,7 +100,7 @@ void initDevice()
 void render() 
 {
 	context->clearTargetView(bgColor, swapChain->backBuffer);
-	context->draw(swapChain->backBuffer, vertexBuff, 4);
+	context->draw(swapChain->backBuffer, vertexBuff, bufferNums);
 
 	swapChain->present(window);
 }

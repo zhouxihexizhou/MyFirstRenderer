@@ -77,3 +77,49 @@ void Drawer::drawTriangle(Triangle triangle, Window window, Camera camera)
     //this->drawLine(triangle.point3, triangle.point1, window, camera);
 }
 
+
+
+//(this->matrix).mat[0][0] = 1 / (camera.aspect * tan(camera.fov / 2));
+//(this->matrix).mat[1][1] = 1 / tan(camera.fov / 2);
+
+(this->matrix).mat[0][0] = (abs(a.x / a.z)) * camera.aspect;
+(this->matrix).mat[1][1] = (abs(a.y / a.z));
+
+
+
+
+//填充三角形  scanline
+void fillTriangle(Texture* texture, Vertex v1, Vertex v2, Vertex v3)
+{
+	float xMin = v1.vector.x; if (v2.vector.x < xMin) xMin = v2.vector.x; if (v3.vector.x < xMin) xMin = v3.vector.x;
+	float xMax = v1.vector.x; if (v2.vector.x > xMax) xMax = v2.vector.x; if (v3.vector.x > xMax) xMax = v3.vector.x;
+	float yMin = v1.vector.y; if (v2.vector.y < yMin) yMin = v2.vector.y; if (v3.vector.y < yMin) yMin = v3.vector.y;
+	float yMax = v1.vector.y; if (v2.vector.y > yMax) yMax = v2.vector.y; if (v3.vector.y > yMax) yMax = v3.vector.y;
+
+	Vector3 a1 = (v2.vector - v1.vector) % (v3.vector - v1.vector);
+	Vector3 a2 = (v3.vector - v2.vector) % (v1.vector - v2.vector);
+	Vector3 a3 = (v1.vector - v3.vector) % (v2.vector - v3.vector);
+	Vector3 p = v1.vector;
+	Vector3 b1, b2, b3;
+	int s;
+	
+	for (int i = xMin; i <= xMax; ++i)
+	{
+		for (int j = yMin; j <= yMax; ++j)
+		{
+			// 计算是否在三角形内部
+			p.x = i;
+			p.y = j;
+			b1 = (v2.vector - v1.vector) % (p - v1.vector);
+			b2 = (v3.vector - v2.vector) % (p - v2.vector);
+			b3 = (v1.vector - v3.vector) % (p - v3.vector);
+
+			if ((a1 * b1 >= 0) && (a2 * b2 >= 0) && (a3 * b3 >= 0)) {
+				s = j * texture->width + i;
+				(texture->colorBuff)[s] = v1.color;
+			}
+		}
+	}
+}
+
+

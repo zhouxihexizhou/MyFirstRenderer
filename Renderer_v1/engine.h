@@ -6,8 +6,10 @@
 //设备
 class Device {
 public:
+	float* depthBuffer;
 	Device() {
 	}
+	void createDepthBuff(Window* window);      //创建深度缓冲
 };
 
 

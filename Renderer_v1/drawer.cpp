@@ -1,6 +1,9 @@
 #include"drawer.h"
 #include"primitives.h"
 #include"shader.h"
+#include"engine.h"
+
+extern Device* device;
 
 
 
@@ -14,6 +17,8 @@ void fillTexture(unsigned int color, Texture* texture)
 			int idx = row * texture->width + col;
 
 			(texture->colorBuff)[idx] = color;
+
+			device->depthBuffer[idx] = 1.0f;
 		}
 	}
 }
@@ -78,24 +83,44 @@ void fillTriangle(Texture* texture, Vertex v1, Vertex v2, Vertex v3)
 	Vector3 a1 = (v2.vector - v1.vector) % (v3.vector - v1.vector);
 	Vector3 a2 = (v3.vector - v2.vector) % (v1.vector - v2.vector);
 	Vector3 a3 = (v1.vector - v3.vector) % (v2.vector - v3.vector);
-	Vector3 p = v1.vector;
+	Vertex p = v1;
+	Vector3 m;
 	Vector3 b1, b2, b3;
 	int s;
-	
+
 	for (int i = xMin; i <= xMax; ++i)
 	{
 		for (int j = yMin; j <= yMax; ++j)
 		{
 			// 计算是否在三角形内部
-			p.x = i;
-			p.y = j;
-			b1 = (v2.vector - v1.vector) % (p - v1.vector);
-			b2 = (v3.vector - v2.vector) % (p - v2.vector);
-			b3 = (v1.vector - v3.vector) % (p - v3.vector);
+			p.vector.x = i;
+			p.vector.y = j;
+			b1 = (v2.vector - v1.vector) % (p.vector - v1.vector);
+			b2 = (v3.vector - v2.vector) % (p.vector - v2.vector);
+			b3 = (v1.vector - v3.vector) % (p.vector - v3.vector);
 
+			//在三角形内
 			if ((a1 * b1 >= 0) && (a2 * b2 >= 0) && (a3 * b3 >= 0)) {
+
+				if (a1.z != 0.0f) {
+					m = p.vector - v1.vector;
+					m.z = -((a1.x * m.x) + (a1.y * m.y)) / a1.z;
+					p.vector.z = m.z + v1.vector.z;
+				}
+				else {
+					p.vector.z = 1.0f;
+				}
+
+				//深度测试 
 				s = j * texture->width + i;
-				(texture->colorBuff)[s] = v1.color;
+				if (p.vector.z <= device->depthBuffer[s]) {
+					
+					//像素着色器
+					p = pixelShader(p);
+
+					(texture->colorBuff)[s] = p.color;
+					device->depthBuffer[s] = p.vector.z;
+				}
 			}
 		}
 	}

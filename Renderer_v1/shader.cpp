@@ -1,7 +1,7 @@
 #include"shader.h"
 #include"transform.h"
 #include"effect.h"
-#include<iostream>
+
 
 
 extern Window* window;
@@ -32,6 +32,7 @@ Vertex gouraudLight(Vertex vertex)
 	//单位化
 	Vector3 norm = vecNormalize(vertex.normal);
 	Vector3 lightDir = vecNormalize(numMulVec(-1.0f, light->direction));      //反射光方向
+
 	//漫反射，点积
 	float diff = norm * lightDir;
 	if (diff < 0.0f) {
@@ -46,6 +47,13 @@ Vertex gouraudLight(Vertex vertex)
 	vertex.vColor = result;
 	vertex.color = vecToInt(vertex.vColor);
 
+	return vertex;
+}
+
+
+//像素着色器
+Vertex pixelShader(Vertex vertex)
+{
 	return vertex;
 }
 

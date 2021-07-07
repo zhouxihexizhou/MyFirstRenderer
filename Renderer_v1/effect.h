@@ -10,8 +10,8 @@ public:
     Vector3 lightColor;     //光颜色
     float ambientStrength;  //环境光系数
     Light() {
-        this->position = { 0.5f, 0.5f, -0.5f };
-        this->direction = { -0.5f, -0.5f, 0.5f };
+        this->position = { 0.3f, 0.4f, -0.5f };
+        this->direction = { -0.3f, -0.4f, 0.5f };
         this->lightColor = { 1.0f, 1.0f, 1.0f };     //白色
         this->ambientStrength = 0.1f;
     }
