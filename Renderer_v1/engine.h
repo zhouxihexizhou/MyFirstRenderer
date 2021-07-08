@@ -33,7 +33,8 @@ public:
 	Context() {
 	}
 	void clearTargetView(unsigned int color, Texture* texture);       //填充指定页面
-	void draw(Texture* texture, Vector3* vec, int num);
+	void draw(Texture* texture, Vector3* vec, int num);               //画
+	void rotateModel(Vector3* vec, int num, Vector3 axis, float a);   //旋转
 };
 
 

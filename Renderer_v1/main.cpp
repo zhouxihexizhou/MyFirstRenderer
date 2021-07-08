@@ -5,6 +5,7 @@
 #include"engine.h"
 #include"effect.h"
 #include"transform.h"
+#include"database.h"
 
 using namespace std; 
 
@@ -18,25 +19,7 @@ Device* device = NULL;
 Context* context = NULL;
 SwapChain* swapChain = NULL;
 
-unsigned int bgColor = ((65 << 16) | (105 << 8) | 225);    //背景颜色
-
-#define bufferNums 14
-
-Vector3 vertexBuff[14]={ 
-{ -0.1f, -0.3f, 0.0f },
-{ -0.3f, -0.3f, 0.0f },
-{ -0.1f, -0.1f, 0.0f },
-{ -0.3f, -0.1f, 0.0f },
-{ -0.3f, -0.1f, 0.3f },
-{ -0.3f, -0.3f, 0.0f },
-{ -0.3f, -0.3f, 0.3f },
-{ -0.1f, -0.3f, 0.0f },
-{ -0.1f, -0.3f, 0.3f },
-{ -0.1f, -0.1f, 0.0f },
-{ -0.1f, -0.1f, 0.3f },
-{ -0.3f, -0.1f, 0.3f },
-{ -0.1f, -0.3f, 0.3f },
-{ -0.3f, -0.3f, 0.3f }, };
+MyData* myData = NULL;
 
 
 //方法声明
@@ -76,8 +59,9 @@ void initWindow()
 {
 	window = new Window(800, 800);
 	camera = new Camera();
-
 	light = new Light();
+	myData = new MyData();
+
 	window->startWindow();
 	return;
 }
@@ -91,7 +75,7 @@ void initDevice()
 
 	swapChain->getBuffer(window);
 	device->createDepthBuff(window);
-	 
+	
 	return;
 }
 
@@ -99,8 +83,10 @@ void initDevice()
 //渲染过程
 void render() 
 {
-	context->clearTargetView(bgColor, swapChain->backBuffer);
-	context->draw(swapChain->backBuffer, vertexBuff, bufferNums);
+	context->clearTargetView(myData->bgColor, swapChain->backBuffer);
+
+	context->draw(swapChain->backBuffer, myData->vertexBuff, myData->vertexNums);
+	context->rotateModel(myData->vertexBuff, myData->vertexNums, myData->axis, myData->angle);
 
 	swapChain->present(window);
 }

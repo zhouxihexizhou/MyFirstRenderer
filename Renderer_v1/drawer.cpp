@@ -27,9 +27,10 @@ void fillTexture(unsigned int color, Texture* texture)
 //画点
 Vertex drawVertex(Texture* texture, Vertex vertex)
 {
+	//顶点着色器
 	Vertex v = vertexShader(vertex);
-	int i = (int)v.vector.y * texture->width + (int)v.vector.x;
-	(texture->colorBuff)[i] = v.color;
+	//int i = (int)v.vector.y * texture->width + (int)v.vector.x;
+	//(texture->colorBuff)[i] = v.color;
 	return v;
 }
 
@@ -111,15 +112,19 @@ void fillTriangle(Texture* texture, Vertex v1, Vertex v2, Vertex v3)
 					p.vector.z = 1.0f;
 				}
 
-				//深度测试 
-				s = j * texture->width + i;
-				if (p.vector.z <= device->depthBuffer[s]) {
-					
-					//像素着色器
-					p = pixelShader(p);
+				//裁剪
+				if (i >= 0 && i < texture->width && j >= 0 && j < texture->height && p.vector.z >= 0.0f && p.vector.z <= 1.0f) {
+				    
+					//深度测试 
+					s = j * texture->width + i;
+					if (p.vector.z <= device->depthBuffer[s]) {
 
-					(texture->colorBuff)[s] = p.color;
-					device->depthBuffer[s] = p.vector.z;
+						//像素着色器
+						p = pixelShader(p);
+
+						(texture->colorBuff)[s] = p.color;
+						device->depthBuffer[s] = p.vector.z;
+					}
 				}
 			}
 		}

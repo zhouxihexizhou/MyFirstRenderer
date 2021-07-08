@@ -51,6 +51,9 @@
     <ClInclude Include="effect.h">
       <Filter>头文件\elements</Filter>
     </ClInclude>
+    <ClInclude Include="database.h">
+      <Filter>头文件\elements</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">

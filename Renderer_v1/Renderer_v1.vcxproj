@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="camera.h" />
+    <ClInclude Include="database.h" />
     <ClInclude Include="drawer.h" />
     <ClInclude Include="effect.h" />
     <ClInclude Include="engine.h" />
