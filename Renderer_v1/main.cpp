@@ -22,15 +22,12 @@ SwapChain* swapChain = NULL;
 
 MyData* myData = NULL;
 
-HHOOK g_Hook;    //钩子
-
 
 //方法声明
 void initWindow();        //初始化窗口
 void initDevice();        //初始化设备
 void render();            //渲染过程
 void cleanupDevice();     //清理设备
-LRESULT CALLBACK KeyboardProc(int code, WPARAM wparam, LPARAM lparam);       //键盘事件监听
 
 
 //主函数
@@ -79,8 +76,6 @@ void initDevice()
 
 	swapChain->getBuffer(window);
 	device->createDepthBuff(window);
-
-	g_Hook = SetWindowsHookEx(WH_KEYBOARD_LL, KeyboardProc, 0, 0);
 	
 	return;
 } 
@@ -93,9 +88,11 @@ void render()
 
 	//context->drawPoints(swapChain->backBuffer, myData->vertexBuff, myData->vertexNums);
 	//context->drawFrame(swapChain->backBuffer, myData->vertexBuff, myData->vertexNums);
-	//context->rotateLight(light, myData->axis, myData->angle);
+
 	context->drawModel(swapChain->backBuffer, myData->vertexBuff, myData->vertexNums);
 	//context->rotateModel(myData->vertexBuff, myData->vertexNums, myData->axis, myData->angle);
+	// 
+	//context->rotateLight(light, myData->axis, myData->angle);
 
 	swapChain->present(window);
 }
@@ -105,23 +102,5 @@ void render()
 void cleanupDevice()
 {
 	
-}
-
-
-//键盘事件监听
-LRESULT CALLBACK KeyboardProc(int code, WPARAM wparam, LPARAM lparam)
-{
-	PKBDLLHOOKSTRUCT p = (PKBDLLHOOKSTRUCT)(lparam);
-
-	int key = (int)(p->vkCode);
-	
-	switch (key) {
-	case 87:cout << "w" << endl; break;
-	case 83:cout << "s" << endl; break;
-	case 65:cout << "a" << endl; break;
-	case 68:cout << "d" << endl; break;
-	}
-
-	return CallNextHookEx(g_Hook, code, wparam, lparam);
 }
 

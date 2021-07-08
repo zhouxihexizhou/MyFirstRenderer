@@ -23,5 +23,4 @@ public:
 
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);     //消息处理函数
-LRESULT CALLBACK KeyboardProc(int code, WPARAM w, LPARAM l);            //键盘事件监听
-
+LRESULT CALLBACK KeyboardProc(int code, WPARAM wparam, LPARAM lparam);       //键盘事件监听

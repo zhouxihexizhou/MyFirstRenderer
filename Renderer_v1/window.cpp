@@ -1,5 +1,7 @@
 #include"window.h"
+#include<iostream>
 
+HHOOK kbHook, mHook;    //钩子
 
 
 //打开窗口
@@ -33,6 +35,10 @@ void Window::startWindow()
 	// 显示窗口
 	ShowWindow(hWnd, SW_SHOW);
 
+	kbHook = SetWindowsHookEx(WH_KEYBOARD_LL, KeyboardProc, 0, 0);
+
+	mHook = SetWindowsHookEx(WH_MOUSE, MouseProc, 0, 0);
+
 	return;
 }
 
@@ -48,5 +54,31 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		break;
 	}
 	return DefWindowProc(hWnd, msg, wParam, lParam);
+}
+
+
+//键盘事件监听
+LRESULT CALLBACK KeyboardProc(int code, WPARAM wparam, LPARAM lparam)
+{
+	PKBDLLHOOKSTRUCT p = (PKBDLLHOOKSTRUCT)(lparam);
+
+	int key = (int)(p->vkCode);
+
+	switch (key) {
+	case 87:std::cout << "w" << std::endl; break;
+	case 83:std::cout << "s" << std::endl; break;
+	case 65:std::cout << "a" << std::endl; break;
+	case 68:std::cout << "d" << std::endl; break;
+	}
+
+	return CallNextHookEx(kbHook, code, wparam, lparam);
+}
+
+
+//鼠标事件监听
+LRESULT CALLBACK MouseProc(int nCode, WPARAM wParam, LPARAM lParam)
+{
+
+	return CallNextHookEx(mHook, nCode, wParam, lParam);
 }
 
