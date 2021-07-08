@@ -152,7 +152,6 @@
   <ItemGroup>
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="drawer.cpp" />
-    <ClCompile Include="effect.cpp" />
     <ClCompile Include="engine.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="shader.cpp" />

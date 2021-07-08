@@ -2,6 +2,23 @@
 #define VERTEXNUMS 14
 
 
+Vector3 vBuff[VERTEXNUMS] = {        //顶点缓存
+		{ -0.1f, -0.3f, 0.0f },
+		{ -0.3f, -0.3f, 0.0f },
+		{ -0.1f, -0.1f, 0.0f },
+		{ -0.3f, -0.1f, 0.0f },
+		{ -0.3f, -0.1f, 0.3f },
+		{ -0.3f, -0.3f, 0.0f },
+		{ -0.3f, -0.3f, 0.3f },
+		{ -0.1f, -0.3f, 0.0f },
+		{ -0.1f, -0.3f, 0.3f },
+		{ -0.1f, -0.1f, 0.0f },
+		{ -0.1f, -0.1f, 0.3f },
+		{ -0.3f, -0.1f, 0.3f },
+		{ -0.1f, -0.3f, 0.3f },
+		{ -0.3f, -0.3f, 0.3f }, };
+
+
 class MyData {
 public:
 
@@ -9,7 +26,7 @@ public:
 
 	int vertexNums; 
 
-	Vector3 vertexBuff[VERTEXNUMS];
+	Vector3* vertexBuff;
 
 	Vector3 axis;
 
@@ -21,24 +38,11 @@ public:
 
 		this->vertexNums = VERTEXNUMS;                      //顶点数量
 
-		this->vertexBuff[0] = { -0.1f, -0.3f, 0.0f };       //顶点缓冲
-		this->vertexBuff[1] = { -0.3f, -0.3f, 0.0f };
-		this->vertexBuff[2] = { -0.1f, -0.1f, 0.0f };
-		this->vertexBuff[3] = { -0.3f, -0.1f, 0.0f };
-		this->vertexBuff[4] = { -0.3f, -0.1f, 0.3f };
-		this->vertexBuff[5] = { -0.3f, -0.3f, 0.0f };
-		this->vertexBuff[6] = { -0.3f, -0.3f, 0.3f };
-		this->vertexBuff[7] = { -0.1f, -0.3f, 0.0f };
-		this->vertexBuff[8] = { -0.1f, -0.3f, 0.3f };
-		this->vertexBuff[9] = { -0.1f, -0.1f, 0.0f };
-		this->vertexBuff[10] = { -0.1f, -0.1f, 0.3f };
-		this->vertexBuff[11] = { -0.3f, -0.1f, 0.3f };
-		this->vertexBuff[12] = { -0.1f, -0.3f, 0.3f };
-		this->vertexBuff[13] = { -0.3f, -0.3f, 0.3f };
+		this->vertexBuff = vBuff;                //顶点缓冲
 
 		this->axis = { 0.0f, 1.0f, 0.0f };      //旋转轴
 
-		this->angle = 0.05f;        //旋转角度
+		this->angle = 1.0f;        //旋转角度，单位：度
 	}
 };
 

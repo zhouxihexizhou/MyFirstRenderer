@@ -1,6 +1,7 @@
 #include"window.h"
 
 
+
 //´ò¿ª´°¿Ú
 void Window::startWindow()
 {

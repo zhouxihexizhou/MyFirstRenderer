@@ -3,7 +3,6 @@
 #include"effect.h"
 
 
-
 extern Window* window;
 extern Camera* camera;
 extern Light* light;
@@ -18,8 +17,11 @@ Vertex vertexShader(Vertex vertex)
 	vertex.vColor = yellow;
 	vertex.color = vecToInt(vertex.vColor);
 
-	Vertex b = gouraudLight(vertex);
-	return b;
+	if (!(vertex.normal.x==0.0f && vertex.normal.y == 0.0f && vertex.normal.z == 0.0f)) {
+		vertex = gouraudLight(vertex);
+	}
+
+	return vertex;
 }
 
 
@@ -43,6 +45,16 @@ Vertex gouraudLight(Vertex vertex)
 
 	//ºÏ³É
 	Vector3 result = vecMulVec((ambient + diffuse), vertex.vColor);
+
+	if (result.x > 1.0f) {
+		result.x = 1.0f;
+	}
+	if (result.y > 1.0f) {
+		result.y = 1.0f;
+	}
+	if (result.z > 1.0f) {
+		result.z = 1.0f;
+	}
 
 	vertex.vColor = result;
 	vertex.color = vecToInt(vertex.vColor);

@@ -1,6 +1,7 @@
 #pragma once
 #include"window.h"
 #include"drawer.h"
+#include"effect.h"
 
 
 //设备
@@ -33,9 +34,12 @@ public:
 	Context() {
 	}
 	void clearTargetView(unsigned int color, Texture* texture);       //填充指定页面
-	void draw(Texture* texture, Vector3* vec, int num);               //画
-	void rotateModel(Vector3* vec, int num, Vector3 axis, float a);   //旋转
-};
+	void drawPoints(Texture* texture, Vector3* vec, int num);         //画点
+	void drawFrame(Texture* texture, Vector3* vec, int num);          //画框架
+	void drawModel(Texture* texture, Vector3* vec, int num);          //画模型
+	void rotateModel(Vector3* vec, int num, Vector3 axis, float a);   //旋转模型
+	void rotateLight(Light* light, Vector3 axis, float a);            //旋转光源
+}; 
 
 
 //创建 设备、交换链、上下文

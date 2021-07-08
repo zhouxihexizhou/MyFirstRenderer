@@ -80,9 +80,6 @@
     <ClCompile Include="shader.cpp">
       <Filter>源文件\achieve</Filter>
     </ClCompile>
-    <ClCompile Include="effect.cpp">
-      <Filter>源文件\elements</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="note.txt">

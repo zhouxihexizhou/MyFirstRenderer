@@ -21,10 +21,13 @@ public:
 };
 
 
-void fillTexture(unsigned int color, Texture* texture);                 //Ìî³äÌùÍ¼
+void fillTexture(unsigned int color, Texture* texture);                 //Ìî³äÆÁÄ»
 
-Vertex drawVertex(Texture* texture, Vertex vertex);                     //»­µã
+bool outofScreen(int x, int y, float z, Texture* texture);              //ÊÇ·ñ³¬³öÆÁÄ»
+
+void drawVertex(Texture* texture, Vertex vertex);                       //»­µã
 void drawLine(Texture* texture, Vertex v1, Vertex v2);                  //»­Ïß  DDAËã·¨
-void fillTriangle(Texture* texture, Vertex v1, Vertex v2, Vertex v3);   //Ìî³äÈı½ÇĞÎ
 void drawTriangle(Texture* texture, Triangle triangle);                 //»­Èı½ÇĞÎ
+
+void fillTriangle(Texture* texture, Vertex v1, Vertex v2, Vertex v3);   //Ìî³äÈı½ÇĞÎ
 

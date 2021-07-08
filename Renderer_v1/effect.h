@@ -13,7 +13,7 @@ public:
         this->position = { 0.3f, 0.4f, -0.5f };
         this->direction = { -0.3f, -0.4f, 0.5f };
         this->lightColor = { 1.0f, 1.0f, 1.0f };     //°×É«
-        this->ambientStrength = 0.1f;
+        this->ambientStrength = 0.05f;
     }
 };
 

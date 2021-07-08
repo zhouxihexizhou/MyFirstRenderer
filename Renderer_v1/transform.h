@@ -69,3 +69,5 @@ Vector3 transformAll(const Vector3& a, const Camera& camera, const Window& win);
 unsigned int vecToInt(Vector3 v);        //类型转换：Vector3 -> unsigned int 
 Vector3 vecNormalize(Vector3 vector);    //三维向量单位化
 
+Vector3 rotateVec(Vector3 vec, Vector3 axis, float a);      //旋转
+

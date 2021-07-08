@@ -6,7 +6,6 @@
 extern Device* device;
 
 
-
 //Ìî³äÌùÍ¼
 void fillTexture(unsigned int color, Texture* texture) 
 {
@@ -24,52 +23,128 @@ void fillTexture(unsigned int color, Texture* texture)
 }
 
 
+//ÊÇ·ñ³¬³öÆÁÄ»
+bool outofScreen(int x, int y, float z, Texture* texture)
+{
+	if (x >= 0 && x < texture->width && y >= 0 && y < texture->height && z >= 0.0f && z <= 1.0f) {
+		return false;
+	}
+	else {
+		return true;
+	}
+}
+
+
 //»­µã
-Vertex drawVertex(Texture* texture, Vertex vertex)
+void drawVertex(Texture* texture, Vertex vertex)
 {
 	//¶¥µã×ÅÉ«Æ÷
 	Vertex v = vertexShader(vertex);
-	//int i = (int)v.vector.y * texture->width + (int)v.vector.x;
-	//(texture->colorBuff)[i] = v.color;
-	return v;
+
+	//Î´³¬³öÆÁÄ»
+	if (!(outofScreen((int)v.vector.x, (int)v.vector.y, v.vector.z, texture))) {
+		int i = (int)v.vector.y * texture->width + (int)v.vector.x;
+		(texture->colorBuff)[i] = v.color;
+	}
+	return;
 }
 
 
 //»­Ïß  DDAËã·¨
 void drawLine(Texture* texture, Vertex v1, Vertex v2)
 {
+	v1 = vertexShader(v1);
+	v2 = vertexShader(v2);
 
-	int i, j, screen_x, screen_y, s;
-	float k;
+	Vertex xMin, xMax, yMin, yMax;
+	int i, screen_x, screen_y, s, situation;
+	float k1, k2, z;
+
 	if (v1.vector.x < v2.vector.x) {
-		k = (v2.vector.y - v1.vector.y) / (v2.vector.x - v1.vector.x);
-		for (i = (int)v1.vector.x; i <= (int)v2.vector.x; ++i) {
-			screen_x = i;
-			screen_y = (int)((k * ((float)i - v1.vector.x)) + v1.vector.y);
-			s = screen_y * texture->width + screen_x;
-			(texture->colorBuff)[s] = v1.color;
-			if ((k > 1 || k < -1) && (screen_y < texture->height - 1)) {
-				screen_y += 1;
-				s = screen_y * texture->width + screen_x;
-				(texture->colorBuff)[s] = v1.color;
-			}
-		}
+		xMin = v1;
+		xMax = v2;
+		situation = 1;
+	}
+	else if (v1.vector.x > v2.vector.x) {
+		xMin = v2;
+		xMax = v1;
+		situation = 1;
 	}
 	else {
-		k = (v1.vector.y - v2.vector.y) / (v1.vector.x - v2.vector.x);
-		for (i = (int)v2.vector.x; i <= (int)v1.vector.x; ++i) {
-			screen_x = i;
-			screen_y = (int)((k * ((float)i - v2.vector.x)) + v2.vector.y);
-			s = screen_y * texture->width + screen_x;
-			(texture->colorBuff)[s] = v1.color;
-			if ((k > 1 || k < -1) && (screen_y < texture->height - 1)) {
-				screen_y += 1;
-				s = screen_y * texture->width + screen_x;
-				(texture->colorBuff)[s] = v1.color;
-			}
+		situation = 2;
+		if (v1.vector.y < v2.vector.y) {
+			yMin = v1;
+			yMax = v2;
+		}
+		else if (v1.vector.y > v2.vector.y) {
+			yMin = v2;
+			yMax = v1;
+		}
+		else {
+			situation = 3;
 		}
 	}
 
+	if (situation == 1) {
+		k1 = (xMax.vector.y - xMin.vector.y) / (xMax.vector.x - xMin.vector.x);
+		k2 = (xMax.vector.z - xMin.vector.z) / (xMax.vector.x - xMin.vector.x);
+		for (i = (int)xMin.vector.x; i <= (int)xMax.vector.x; ++i) {
+			screen_x = i;
+			screen_y = (int)((k1 * ((float)i - xMin.vector.x)) + xMin.vector.y);
+			z = k2 * ((float)i - xMin.vector.x) + xMin.vector.z;
+
+			//Î´³¬³öÆÁÄ»
+			if (!(outofScreen(screen_x, screen_y, z, texture))) {
+				s = screen_y * texture->width + screen_x;
+				(texture->colorBuff)[s] = xMin.color;
+				if ((k1 > 1 || k1 < -1) && (screen_y < texture->height - 1)) {
+					screen_y += 1;
+					s = screen_y * texture->width + screen_x;
+					(texture->colorBuff)[s] = xMin.color;
+				}
+			}
+		}
+	}
+	else if (situation == 2) {
+		screen_x = yMin.vector.x;
+		for (i = (int)yMin.vector.y; i <= (int)yMax.vector.y; ++i) {
+			screen_y = i;
+			k2 = (i - yMin.vector.y) / (yMax.vector.y - yMin.vector.y);
+			z = k2 * (yMax.vector.z - yMin.vector.z) + yMin.vector.z;
+
+			//Î´³¬³öÆÁÄ»
+			if (!(outofScreen(screen_x, screen_y, z, texture))) {
+				s = screen_y * texture->width + screen_x;
+				(texture->colorBuff)[s] = xMin.color;
+			}
+		}
+	}
+	else if (situation == 3) {
+		screen_x = v1.vector.x;
+		screen_y = v1.vector.y;
+		if (v1.vector.z < v2.vector.z) {
+			z = v1.vector.z;
+		}
+		else {
+			z = v2.vector.z;
+		}
+
+		//Î´³¬³öÆÁÄ»
+		if (!(outofScreen(screen_x, screen_y, z, texture))) {
+			s = screen_y * texture->width + screen_x;
+			(texture->colorBuff)[s] = v1.color;
+		}
+	}
+}
+
+
+//»­Èý½ÇÐÎ
+void drawTriangle(Texture* texture, Triangle triangle)
+{
+	Vertex v1 = vertexShader(triangle.point1);
+	Vertex v2 = vertexShader(triangle.point2);
+	Vertex v3 = vertexShader(triangle.point3);
+	fillTriangle(texture, v1, v2, v3);
 }
 
 
@@ -129,18 +204,5 @@ void fillTriangle(Texture* texture, Vertex v1, Vertex v2, Vertex v3)
 			}
 		}
 	}
-}
-
-
-//»­Èý½ÇÐÎ
-void drawTriangle(Texture* texture, Triangle triangle)
-{
-	Vertex v1 = drawVertex(texture, triangle.point1);
-	Vertex v2 = drawVertex(texture, triangle.point2);
-	Vertex v3 = drawVertex(texture, triangle.point3);
-	//drawLine(texture, v1, v2);
-	//drawLine(texture, v2, v3);
-	//drawLine(texture, v3, v1);
-	fillTriangle(texture, v1, v2, v3);
 }
 

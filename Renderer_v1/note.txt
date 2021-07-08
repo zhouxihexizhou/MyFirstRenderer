@@ -139,3 +139,71 @@ vertexBuff[VERTEXNUMS] = {        //¶¥µã»º´æ
 		{ -0.1f, -0.3f, 0.3f },
 		{ -0.3f, -0.3f, 0.3f }, };
 
+
+
+		this->vertexBuff[0] = { -0.1f, -0.3f, 0.0f };       //¶¥µã»º³å
+		this->vertexBuff[1] = { -0.3f, -0.3f, 0.0f };
+		this->vertexBuff[2] = { -0.1f, -0.1f, 0.0f };
+		this->vertexBuff[3] = { -0.3f, -0.1f, 0.0f };
+		this->vertexBuff[4] = { -0.3f, -0.1f, 0.3f };
+		this->vertexBuff[5] = { -0.3f, -0.3f, 0.0f };
+		this->vertexBuff[6] = { -0.3f, -0.3f, 0.3f };
+		this->vertexBuff[7] = { -0.1f, -0.3f, 0.0f };
+		this->vertexBuff[8] = { -0.1f, -0.3f, 0.3f };
+		this->vertexBuff[9] = { -0.1f, -0.1f, 0.0f };
+		this->vertexBuff[10] = { -0.1f, -0.1f, 0.3f };
+		this->vertexBuff[11] = { -0.3f, -0.1f, 0.3f };
+		this->vertexBuff[12] = { -0.1f, -0.3f, 0.3f };
+		this->vertexBuff[13] = { -0.3f, -0.3f, 0.3f };
+
+
+
+		//int i = (int)v.vector.y * texture->width + (int)v.vector.x;
+	//(texture->colorBuff)[i] = v.color;
+
+
+
+
+
+	if (v1.vector.x < v2.vector.x) {
+		k1 = (v2.vector.y - v1.vector.y) / (v2.vector.x - v1.vector.x);
+		k2 = (v2.vector.z - v1.vector.z) / (v2.vector.x - v1.vector.x);
+		for (i = (int)v1.vector.x; i <= (int)v2.vector.x; ++i) {
+			screen_x = i;
+			screen_y = (int)((k1 * ((float)i - v1.vector.x)) + v1.vector.y);
+			z = k2 * ((float)i - v1.vector.x) + v1.vector.z;
+
+			//Î´³¬³öÆÁÄ»
+			if (!(outofScreen(screen_x, screen_y, z, texture))) {
+				s = screen_y * texture->width + screen_x;
+				(texture->colorBuff)[s] = v1.color;
+				if ((k1 > 1 || k1 < -1) && (screen_y < texture->height - 1)) {
+					screen_y += 1;
+					s = screen_y * texture->width + screen_x;
+					(texture->colorBuff)[s] = v1.color;
+				}
+			}
+		}
+	}
+	else if (v1.vector.x > v2.vector.x) {
+		k1 = (v1.vector.y - v2.vector.y) / (v1.vector.x - v2.vector.x);
+		k2 = (v1.vector.z - v2.vector.z) / (v1.vector.x - v2.vector.x);
+		for (i = (int)v2.vector.x; i <= (int)v1.vector.x; ++i) {
+			screen_x = i;
+			screen_y = (int)((k1 * ((float)i - v2.vector.x)) + v2.vector.y);
+			z = k2 * ((float)i - v2.vector.x) + v2.vector.z;
+
+			//Î´³¬³öÆÁÄ»
+			if (!(outofScreen(screen_x, screen_y, z, texture))) {
+				s = screen_y * texture->width + screen_x;
+				(texture->colorBuff)[s] = v1.color;
+				if ((k1 > 1 || k1 < -1) && (screen_y < texture->height - 1)) {
+					screen_y += 1;
+					s = screen_y * texture->width + screen_x;
+					(texture->colorBuff)[s] = v1.color;
+				}
+			}
+		}
+	}
+
+
