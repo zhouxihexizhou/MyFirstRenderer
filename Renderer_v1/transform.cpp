@@ -1,4 +1,5 @@
 #include"transform.h"
+#include<math.h>
 
 
 //世界转换：对象坐标->世界坐标
@@ -89,7 +90,7 @@ Vector3 vecNormalize(Vector3 vector)
 //旋转
 Vector3 rotateVec(Vector3 vec, Vector3 axis, float a)
 {
-    //弧度化角度，acos(-1)=pi
+    //角度化弧度，acos(-1)=pi
     a /= (180 / acos(-1));
 
     axis = vecNormalize(axis);
@@ -99,22 +100,27 @@ Vector3 rotateVec(Vector3 vec, Vector3 axis, float a)
     matrix.mat[0][0] = cos(a) + (axis.x * axis.x * (1 - (cos(a))));
     matrix.mat[0][1] = axis.x * axis.y * (1 - (cos(a))) + (axis.z * (sin(a)));
     matrix.mat[0][2] = axis.x * axis.z * (1 - (cos(a))) - (axis.y * (sin(a)));
-    matrix.mat[0][3] = 0.0f;
 
     matrix.mat[1][0] = axis.x * axis.y * (1 - (cos(a))) - (axis.z * (sin(a)));
     matrix.mat[1][1] = cos(a) + (axis.y * axis.y * (1 - (cos(a))));
     matrix.mat[1][2] = axis.y * axis.z * (1 - (cos(a))) + (axis.x * (sin(a)));
-    matrix.mat[1][3] = 0.0f;
 
     matrix.mat[2][0] = axis.x * axis.z * (1 - (cos(a))) + (axis.y * (sin(a)));
     matrix.mat[2][1] = axis.y * axis.z * (1 - (cos(a))) - (axis.x * (sin(a)));
     matrix.mat[2][2] = cos(a) + (axis.z * axis.z * (1 - (cos(a))));
-    matrix.mat[2][3] = 0.0f;
 
-    matrix.mat[3][0] = 0.0f;
-    matrix.mat[3][1] = 0.0f;
-    matrix.mat[3][2] = 0.0f;
-    matrix.mat[3][3] = 1.0f;
+    return vector3_transform(vec, matrix);
+}
+
+
+//平移
+Vector3 moveVec(Vector3 vec, Vector3 target)
+{
+    Matrix matrix;
+    //平移矩阵
+    matrix.mat[3][0] = target.x;
+    matrix.mat[3][1] = target.y;
+    matrix.mat[3][2] = target.z;
 
     return vector3_transform(vec, matrix);
 }

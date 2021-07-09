@@ -4,6 +4,19 @@
 class Matrix {
 public:
     float mat[4][4];
+    Matrix() {
+        int i, j;                                          //默认单位矩阵
+        for (i = 0; i < 4; ++i) {                          // 1.0f, 0.0f, 0.0f, 0.0f
+            for (j = 0; j < 4; ++j) {                      // 0.0f, 1.0f, 0.0f, 0.0f
+                if (i == j) {                              // 0.0f, 0.0f, 1.0f, 0.0f
+                    this->mat[i][j] = 1.0f;                // 0.0f, 0.0f, 0.0f, 1.0f
+                }
+                else {
+                    this->mat[i][j] = 0.0f;
+                }
+            }
+        }
+    }
 };
 
 //点

@@ -1,8 +1,8 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include<string>
 #include"primitives.h"
+#include<string>
 
 using namespace std;
 
@@ -19,6 +19,9 @@ public:
     float near_range;       //近范围
     float far_range;        //远范围
 
+    float lastX;            //相机位置初始   要 < 0.0f
+    float lastY;
+
     Camera() {
         this->name = "camera";
         this->is_open = true;
@@ -29,12 +32,12 @@ public:
         this->aspect = 1.0f;
         this->near_range = 0.5f;
         this->far_range = 1.5f;
-    }
 
+        this->lastX = -10.0f; 
+        this->lastY = -10.0f;
+    }
 };
 
-void free_camera(Camera* camera);        //销毁相机
-void camera_msg(Camera* camera);         //打印相机信息
-
+void free_camera(Camera* camera);         //销毁相机
 
 #endif
