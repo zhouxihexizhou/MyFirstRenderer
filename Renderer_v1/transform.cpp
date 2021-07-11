@@ -15,10 +15,12 @@ Vector3 WorldTrans::wTrans(const Vector3& a)
 Vector3 ViewTrans::vTrans(const Vector3& a, const Camera& camera)
 {
     Vector3 y = camera.target % camera.xDirect; 
-    (this->matrix).mat[0][0] = camera.xDirect.x;    (this->matrix).mat[0][1] = camera.xDirect.y;   (this->matrix).mat[0][2] = camera.xDirect.z;
-    (this->matrix).mat[1][0] = y.x;                 (this->matrix).mat[1][1] = y.y;                (this->matrix).mat[1][2] = y.z;
-    (this->matrix).mat[2][0] = camera.target.x;     (this->matrix).mat[2][1] = camera.target.y;    (this->matrix).mat[2][2] = camera.target.z;
-    (this->matrix).mat[3][0] = -camera.position.x;  (this->matrix).mat[3][1] = -camera.position.y; (this->matrix).mat[3][2] = -camera.position.z;
+    (this->matrix).mat[0][0] = camera.xDirect.x;     (this->matrix).mat[0][1] = y.x;     (this->matrix).mat[0][2] = camera.target.x;
+    (this->matrix).mat[1][0] = camera.xDirect.y;     (this->matrix).mat[1][1] = y.y;     (this->matrix).mat[1][2] = camera.target.y;
+    (this->matrix).mat[2][0] = camera.xDirect.z;     (this->matrix).mat[2][1] = y.z;     (this->matrix).mat[2][2] = camera.target.z;
+    (this->matrix).mat[3][0] = -camera.xDirect.x * camera.position.x - camera.xDirect.y * camera.position.y - camera.xDirect.z * camera.position.z;
+    (this->matrix).mat[3][1] = -y.x * camera.position.x - y.y * camera.position.y - y.z * camera.position.z;
+    (this->matrix).mat[3][2] = -camera.target.x * camera.position.x - camera.target.y * camera.position.y - camera.target.z * camera.position.z;
     Vector3 b;
     b = vector3_transform(a, this->matrix);
     return b;

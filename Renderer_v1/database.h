@@ -41,10 +41,10 @@ public:
 		this->vertexBuff = vBuff;                //顶点缓冲
 
 		this->axis = { 0.0f, 1.0f, 0.0f };      //旋转轴
-		this->angle = 2.0f;        //旋转角度，单位：度
+		this->rotateSpeed = 60.0f;              //模型旋转速度，单位：度/秒
 
-		this->moveSpeed = 2.0f;          //移动速度
-		this->rotateSpeed = 3.0f;        //旋转速度    度/帧
+		this->moveSpeed = 1.0f;          //相机移动速度  单位/秒
+		this->angle = 2.0f;              //视角旋转幅度
 	}
 };
 

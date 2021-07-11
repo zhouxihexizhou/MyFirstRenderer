@@ -1,4 +1,5 @@
 #include<iostream>
+#include<ctime>
 #include"camera.h"
 #include"window.h"
 #include"primitives.h"
@@ -23,6 +24,9 @@ SwapChain* swapChain = NULL;
 MyData* myData = NULL;
 
 HHOOK kbHook, mHook;    //钩子
+
+float deltaTime = 0.0f; // 当前帧与上一帧的时间差
+float lastFrame = 0.0f; // 上一帧的时间
 
 
 //方法声明
@@ -92,12 +96,18 @@ void initDevice()
 //渲染过程
 void render() 
 {
+	//计时，程序运行开始计时
+	float currentFrame = clock();    //毫秒
+	deltaTime = (currentFrame - lastFrame) / 1000;
+	lastFrame = currentFrame;
+
+	//渲染
 	context->clearTargetView(myData->bgColor, swapChain->backBuffer);
 
 	//context->drawPoints(swapChain->backBuffer, myData->vertexBuff, myData->vertexNums);
 	//context->drawFrame(swapChain->backBuffer, myData->vertexBuff, myData->vertexNums);
-	//context->rotateModel(myData->vertexBuff, myData->vertexNums, myData->axis, myData->angle);
-	//context->rotateLight(light, myData->axis, myData->angle);
+	//context->rotateModel(myData->vertexBuff, myData->vertexNums, myData->axis, myData->rotateSpeed * deltaTime);
+	//context->rotateLight(light, myData->axis, myData->rotateSpeed * deltaTime);
 
 	context->drawModel(swapChain->backBuffer, myData->vertexBuff, myData->vertexNums);
 
@@ -116,28 +126,27 @@ void cleanupDevice()
 LRESULT CALLBACK KeyboardProc(int code, WPARAM wparam, LPARAM lparam)
 {
 	PKBDLLHOOKSTRUCT p = (PKBDLLHOOKSTRUCT)(lparam);
-
 	int key = (int)(p->vkCode);
 
 	//相机移动
 	switch (key) {
 	case 87:      //w
-		camera->position = moveVec(camera->position, numMulVec(myData->moveSpeed / 100, camera->target));
+		camera->position = moveVec(camera->position, numMulVec(myData->moveSpeed * deltaTime, camera->target));
 		break;
 	case 83:      //s
-		; camera->position = moveVec(camera->position, numMulVec((-1.0f) * myData->moveSpeed / 100, camera->target));
+		; camera->position = moveVec(camera->position, numMulVec((-1.0f) * myData->moveSpeed * deltaTime, camera->target));
 		break; break;
 	case 65:      //a
-		camera->position = moveVec(camera->position, numMulVec((-1.0f) * myData->moveSpeed / 100, camera->xDirect));
+		camera->position = moveVec(camera->position, numMulVec((-1.0f) * myData->moveSpeed * deltaTime, camera->xDirect));
 		break; break;
 	case 68:      //d
-		camera->position = moveVec(camera->position, numMulVec(myData->moveSpeed / 100, camera->xDirect));
+		camera->position = moveVec(camera->position, numMulVec(myData->moveSpeed * deltaTime, camera->xDirect));
 		break; break;
 	case 74:      //j
-		context->rotateModel(myData->vertexBuff, myData->vertexNums, myData->axis, myData->angle);
+		context->rotateModel(myData->vertexBuff, myData->vertexNums, myData->axis, myData->rotateSpeed * deltaTime);
 		break; break;
 	case 75:      //k
-		context->rotateLight(light, myData->axis, myData->angle);
+		context->rotateLight(light, myData->axis, myData->rotateSpeed * deltaTime);
 		break; break;
 	}
 
@@ -152,24 +161,35 @@ LRESULT CALLBACK MouseProc(int nCode, WPARAM wParam, LPARAM lParam)
 	POINT   pt = p->pt;
 
 	//角度化弧度，acos(-1)=pi
-	float a = myData->rotateSpeed / (180 / acos(-1));
+	float a = myData->angle * deltaTime / (180 / acos(-1));
 
 	if (camera->lastX < 0.0f || camera->lastY < 0.0f) {
 	}
 	else {
 		//相机旋转
-		float xoffset = camera->lastX - pt.x;
+		float xoffset = pt.x - camera->lastX;
 		float yoffset = camera->lastY - pt.y;
 
-		float yaw = (xoffset * a);
-		float pitch = (yoffset * a);
+		camera->yaw += (xoffset * a);
+		camera->pitch += (yoffset * a);
 
-		Vector3 target = camera->target;
-		Vector3 xDirect = camera->xDirect;
+		if (camera->pitch > 89.0f)
+			camera->pitch = 89.0f;
+		if (camera->pitch < -89.0f)
+			camera->pitch = -89.0f;
+		if (camera->yaw > 89.0f)
+			camera->yaw = 89.0f;
+		if (camera->yaw < -89.0f)
+			camera->yaw = -89.0f;
 
-		camera->target = rotateVec(camera->target, xDirect, pitch);
-		camera->target = rotateVec(camera->target, (target % xDirect), yaw);
-		camera->xDirect = rotateVec(camera->xDirect, (target % xDirect), yaw);
+		camera->target.x = cos(camera->pitch) * sin(camera->yaw);
+		camera->target.y = sin(camera->pitch);
+		camera->target.z = cos(camera->pitch) * cos(camera->yaw);
+		camera->target = vecNormalize(camera->target);
+
+		camera->xDirect.x = cos(camera->yaw);
+		camera->xDirect.z = (-1.0f) * sin(camera->yaw);
+		camera->xDirect = vecNormalize(camera->xDirect);
 	}
 	camera->lastX = pt.x;
 	camera->lastY = pt.y;
