@@ -429,3 +429,115 @@ void fillTriangle(Texture* texture, Vertex v1, Vertex v2, Vertex v3)
 
 
 
+void fillTopTri(Texture* texture, Vertex v1, Vertex v2, Vertex v3, Vector3 normal, Vector3 zero)
+{
+	float dx_right, dx_left, xs, xe, height, xMin, xMax;
+	int temp_y, right, left, s, i;
+	Vertex temp;
+	Vector3 m, p;
+	s = 0;
+	if (v2.vector.x < v1.vector.x) {
+		temp = v2;
+		v2 = v1;
+		v1 = temp;
+	}
+	height = v3.vector.y - v1.vector.y;
+	dx_left = (v3.vector.x - v1.vector.x) / height;
+	dx_right = (v3.vector.x - v2.vector.x) / height;
+
+	xs = v1.vector.x;
+	xe = v2.vector.x;
+
+	std::cout << v3.vector.x << std::endl;
+	std::cout << v3.vector.y << std::endl;
+	std::cout << "------------" << std::endl;
+
+	//裁剪
+	if (v1.vector.y < 0.0f) {
+		xs = xs + dx_left * (-v1.vector.y);
+		xe = xe + dx_right * (-v1.vector.y);
+		v1.vector.y = 0.0f;
+	}
+	if (v3.vector.y >= (float)texture->height) {
+		v3.vector.y = (float)(texture->height - 1);
+	}
+	s = ((int)v1.vector.y) * texture->width;
+
+	if (v2.vector.x < v3.vector.x) {
+		xMax = v3.vector.x;
+	}
+	else {
+		xMax = v2.vector.x;
+	}
+	if (v1.vector.x < v3.vector.x) {
+		xMin = v1.vector.x;
+	}
+	else {
+		xMin = v3.vector.x;
+	}
+
+	if (v1.vector.x >= 0.0f && v1.vector.x < (float)texture->width &&
+		v2.vector.x >= 0.0f && v2.vector.x < (float)texture->width &&
+		v3.vector.x >= 0.0f && v3.vector.x < (float)texture->width) {
+		for (temp_y = (int)v1.vector.y; temp_y <= (int)v3.vector.y; temp_y++, s += texture->width) {
+			for (i = s + (int)xs; i <= s + (int)xe; ++i) {
+
+				//计算深度
+				p.x = (float)(i - s);
+				p.y = (float)(temp_y);
+				if (normal.z != 0.0f) {
+					m = p - zero;
+					m.z = -((normal.x * m.x) + (normal.y * m.y)) / normal.z;
+					p.z = m.z + zero.z;
+				}
+				else {
+					p.z = 1.0f;
+				}
+
+				//深度测试
+				if (p.z < device->depthBuffer[i]) {
+					(texture->colorBuff)[i] = v1.color;
+					device->depthBuffer[i] = p.z;
+				}
+			}
+			xs += dx_left;
+			if (xs < xMin) {
+				xs = xMin;
+			}
+			else if (xs > xMax) {
+				xs = xMax;
+			}
+			xe += dx_right;
+			if (xe < xMin) {
+				xe = xMin;
+			}
+			else if (xe > xMax) {
+				xe = xMax;
+			}
+		}
+	}
+	else {
+		for (temp_y = (int)v1.vector.y; temp_y <= (int)v3.vector.y; temp_y++, s += texture->width) {
+			left = (int)xs;
+			right = (int)xe;
+			xs += dx_left;
+			xe += dx_right;
+			if (left < 0) {
+				left = 0;
+				if (right < 0) {
+					continue;
+				}
+			}
+			if (right >= texture->width) {
+				right = texture->width - 1;
+				if (left >= texture->width) {
+					continue;
+				}
+			}
+			for (i = s + left; i <= s + right; ++i) {
+				(texture->colorBuff)[i] = v1.color;
+			}
+		}
+	}
+}
+

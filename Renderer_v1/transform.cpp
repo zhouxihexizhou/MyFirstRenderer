@@ -50,6 +50,8 @@ Vector3 sTrans(const Vector3& a, const Window& win)
     b.x = (win.windowWidth / 2) + (a.x * win.windowWidth / 2);
     b.y = (win.windowHeight / 2) - (a.y * win.windowHeight / 2);
     b.z = a.z;
+    b.x = (float)((int)b.x);
+    b.y = (float)((int)b.y);
     return b;
 }
 

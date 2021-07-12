@@ -29,7 +29,7 @@ void drawVertex(Texture* texture, Vertex vertex);                       //画点
 void drawLine(Texture* texture, Vertex v1, Vertex v2);                  //画线  DDA算法
 void drawTriangle(Texture* texture, Triangle triangle);                 //画三角形
 
-void fillTriangle(Texture* texture, Vertex v1, Vertex v2, Vertex v3);    //填充三角形
-void fillTopTri(Texture* texture, Vertex v1, Vertex v2, Vertex v3);      //平顶三角形
-void fillBottomTri(Texture* texture, Vertex v1, Vertex v2, Vertex v3);   //平底三角形
+void fillTriangle(Texture* texture, Vertex v1, Vertex v2, Vertex v3);                                    //填充三角形     scanline算法
+void fillTopTri(Texture* texture, Vertex v1, Vertex v2, Vertex v3, Vector3 normal, Vector3 zero);        //平顶三角形
+void fillBottomTri(Texture* texture, Vertex v1, Vertex v2, Vertex v3, Vector3 normal, Vector3 zero);     //平底三角形 
 
