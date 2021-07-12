@@ -28,6 +28,9 @@ HHOOK kbHook, mHook;    //钩子
 float deltaTime = 0.0f; // 当前帧与上一帧的时间差
 float lastFrame = 0.0f; // 上一帧的时间
 
+string FilePath = "input";                 //输入文件目录
+string FileTail = ".png";                  //目标文件后缀
+
 
 //方法声明
 void initWindow();        //初始化窗口
@@ -85,9 +88,17 @@ void initDevice()
 	swapChain->getBuffer(window);
 	device->createDepthBuff(window);
 
+	vector<string> temp;
+	vector<string> name;
+	getAllTex(FilePath, temp, FileTail, name);
+	for (int i = 0; i < temp.size(); ++i)
+	{
+		getTexBuff(temp[i], name[i]);
+	}
+
 	//设置键盘，鼠标监听
-	kbHook = SetWindowsHookEx(WH_KEYBOARD_LL, KeyboardProc, 0, 0);
-	mHook = SetWindowsHookEx(WH_MOUSE_LL, MouseProc, 0, 0);
+	//kbHook = SetWindowsHookEx(WH_KEYBOARD_LL, KeyboardProc, 0, 0);
+	//mHook = SetWindowsHookEx(WH_MOUSE_LL, MouseProc, 0, 0);
 	
 	return;
 } 

@@ -2,6 +2,7 @@
 #include"primitives.h"
 #include"shader.h"
 #include"engine.h"
+#include"transform.h"
 #include<iostream>
 
 extern Device* device;
@@ -51,15 +52,39 @@ void drawVertex(Texture* texture, Vertex vertex)
 }
 
 
+//颜色线性插值   num数量包括起始点
+Vector3* colorInter(Vector3 sColor, Vector3 eColor, int num)
+{
+	float r, g, b;
+	Vector3* line = new Vector3[num];
+	r = (eColor.x - sColor.x) / (float)(num - 1);
+	g = (eColor.y - sColor.y) / (float)(num - 1);
+	b = (eColor.z - sColor.z) / (float)(num - 1);
+	for (int i = 0; i < num; ++i) {
+		line[i].x = (float)i * r + sColor.x;
+		line[i].y = (float)i * g + sColor.y;
+		line[i].z = (float)i * b + sColor.z;
+	}
+	return line;
+}
+
+
 //画线  Bresenham算法
 void drawLine(Texture* texture, Vertex v1, Vertex v2)
 {
 	v1 = vertexShader(v1);
 	v2 = vertexShader(v2);
 
-	int dx, dy, dx2, dy2, x_inc, y_inc, error, index, s;
+	int dx, dy, dx2, dy2, x_inc, y_inc, error, index, s, i, j;
+	Vertex m;
 
-	s = (int)v1.vector.y * texture->width + (int)v1.vector.x;
+	//超出画面
+	if ((v1.vector.x < 0.0f && v2.vector.x < 0.0f) ||
+		(v1.vector.x >= texture->width && v2.vector.x >= texture->width) ||
+		(v1.vector.y < 0.0f && v2.vector.y < 0.0f) ||
+		(v1.vector.y >= texture->height && v2.vector.y >= texture->height)) {
+		return;
+	}
 
 	dx = v2.vector.x - v1.vector.x;
 	dy = v2.vector.y - v1.vector.y;
@@ -73,38 +98,57 @@ void drawLine(Texture* texture, Vertex v1, Vertex v2)
 	}
 
 	if (dy >= 0) {
-		y_inc = texture->width;
+		y_inc = 1;
 	}
 	else {
-		y_inc = -texture->width;
+		y_inc = -1;
 		dy = -dy;
 	}
 
 	dx2 = dx * 2;
 	dy2 = dy * 2;
 
+	Vector3* line1 = colorInter(v1.vColor, v2.vColor, dx + 1);
+	Vector3* line2 = colorInter(v1.vColor, v2.vColor, dy + 1);
+
 	if (dx > dy) {
 		error = dy2 - dx;
+		j = (int)v1.vector.y;
+		i = (int)v1.vector.x;
 		for (index = 0; index <= dx; index++) {
-			(texture->colorBuff)[s] = v1.color;
+
+			//裁剪
+			if (i >= 0 && i < texture->width && j >= 0 && j < texture->height) {
+				s = j * texture->width + i;
+				(texture->colorBuff)[s] = vecToInt(line1[index]);
+			}
+
 			if (error >= 0) {
 				error -= dx2;
-				s += y_inc;
+				j += y_inc;
 			}
 			error += dy2;
-			s += x_inc;
+			i += x_inc;
 		}
 	}
 	else {
 		error = dx2 - dy;
+		j = (int)v1.vector.y;
+		i = (int)v1.vector.x;
 		for (index = 0; index <= dy; index++) {
-			(texture->colorBuff)[s] = v1.color;
+
+			//裁剪
+			if (i >= 0 && i < texture->width && j >= 0 && j < texture->height) {
+				s = j * texture->width + i;
+				(texture->colorBuff)[s] = vecToInt(line2[index]);
+			}
+
 			if (error >= 0) {
 				error -= dy2;
-				s += x_inc;
+				i += x_inc;
 			}
 			error += dx2;
-			s += y_inc;
+			j += y_inc;
 		}
 	}
 }

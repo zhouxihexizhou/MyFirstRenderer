@@ -9,13 +9,22 @@ extern Light* light;
 
 Vector3 yellow = { 1.0f, 1.0f, 0.0f };
 
+Vector3 color[3] = { { 1.0f, 0.0f, 0.0f } ,     //ºì
+                     { 0.0f, 1.0f, 0.0f } ,     //ÂÌ
+                     { 0.0f, 0.0f, 1.0f } };    //À¶
+static int colorPit = 0;
+
 //¶¥µã×ÅÉ«Æ÷
 Vertex vertexShader(Vertex vertex)
 {
 	vertex.vector = transformAll(vertex.vector, *camera, *window);
 
-	vertex.vColor = yellow;
+	vertex.vColor = color[colorPit];
 	vertex.color = vecToInt(vertex.vColor);
+	colorPit++;
+	if (colorPit >= 2) {
+		colorPit = 0;
+	}
 
 	if (!(vertex.normal.x==0.0f && vertex.normal.y == 0.0f && vertex.normal.z == 0.0f)) {
 		vertex = gouraudLight(vertex);
